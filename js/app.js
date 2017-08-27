@@ -93,7 +93,11 @@ function addTaskHtml(task, key) {
 }
 
 function removeTaskHtml(key) {
-    $("#" + key).remove();
+    let task = $("#" + key);
+    task.animate({
+        left: "+=1000px",
+        opacity: "0"
+    }, "slow", e => task.remove());
 }
 
 function addTask() {
@@ -116,10 +120,7 @@ function addTask() {
 function removeTask(e) {
     if (auth.currentUser){
         let task = $(e).parent();
-        task.animate({
-            left: "+=1000px",
-            opacity: "0"
-        }, "slow", e => taskRef.child(task.attr("id")).remove());
+        taskRef.child(task.attr("id")).remove();
     }
 }
 
