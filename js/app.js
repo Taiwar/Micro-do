@@ -3,6 +3,7 @@
 let database;
 let auth;
 let listRef;
+let memberRef;
 let taskRef;
 
 $.getJSON("config.json", function(json) {
@@ -18,6 +19,7 @@ $.getJSON("config.json", function(json) {
             }
             $("#todo-container").show();
             listRef = database.ref('lists/' + auth.currentUser.uid);
+            memberRef = database.ref('lists/' + auth.currentUser.uid + "/members");
             taskRef = database.ref('lists/' + auth.currentUser.uid + "/tasks");
             taskRef.on('child_added', function(data) {
                 console.log("added " + data.key);
@@ -82,7 +84,7 @@ function openSettings() {
 
 function addTaskHtml(task, key) {
     const TaskHTML = ({key, text, author}) => `
-      <li id="${key}" class="collection-item avatar">
+      <li id="${key}" class="collection-item avatar" hidden>
         <img onclick="removeTask(this)" src="img/ic_done_white.png" alt="" class="z-depth-2 circle blue img-button">
         <span class="title task-text">${text}</span>
         <p class="task-author">${author}</p>
@@ -90,6 +92,7 @@ function addTaskHtml(task, key) {
     `;
     let newTask = [{ key: key, text: task.text, author: task.author }].map(TaskHTML);
     $("#task-display").append(newTask);
+    $("#" + key).fadeIn("slow");
 }
 
 function removeTaskHtml(key) {
